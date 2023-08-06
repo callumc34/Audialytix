@@ -1,2 +1,5 @@
 # Python virtual environments
 .venv
+
+# Python cache generation
+__pycache__
