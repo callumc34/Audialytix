@@ -1,9 +1,16 @@
 from essentia import Pool, run
-from essentia.streaming import *
+from essentia.streaming import (
+    MonoLoader,
+    FrameCutter,
+    OnsetDetection,
+    Windowing,
+    FFT,
+    CartesianToPolar,
+)
 
 
 def analyse(
-    file: str, frameSize: int = 1024, hopSize: int = 512
+    filename: str, frame_size: int = 1024, hop_size: int = 512
 ) -> Pool:
     """
     Perform onset detection on the file and return the results in a pool.
@@ -16,17 +23,17 @@ def analyse(
     :type       hopSize:    int
 
     :returns:   Pool of the onset detection values.
-    :rtype:     essentia.Pool
+    :rtype:     Pool
     """
-    loader = MonoLoader(filename=file)
-    frameCutter = FrameCutter(frameSize=frameSize, hopSize=hopSize)
-
-    od_hfc = OnsetDetection(method="hfc")
-    od_complex = OnsetDetection(method="complex")
+    loader = MonoLoader(filename=filename)
+    frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
 
     w = Windowing(type="hann")
     fft = FFT()
     c2p = CartesianToPolar()
+
+    od_hfc = OnsetDetection(method="hfc")
+    od_complex = OnsetDetection(method="complex")
 
     pool = Pool()
 
