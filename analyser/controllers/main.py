@@ -6,7 +6,15 @@ main = Blueprint("main", __name__)
 
 @main.errorhandler(Exception)
 def handle_exception(e: Exception) -> tuple:
-    """Handle exceptions."""
+    """
+    Handles all exceptions thrown by the application.
+
+    :param      e:    The exception
+    :type       e:    Exception
+
+    :returns:   The error message and the error code.
+    :rtype:     tuple
+    """
     if isinstance(e, HTTPException):
         return e
 

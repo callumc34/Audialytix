@@ -16,7 +16,12 @@ DEBUG = os.environ.get("DEBUG", False)
 
 
 def create_server() -> Flask:
-    """Create a Flask server instance."""
+    """
+    Creates a server.
+
+    :returns:   The Flask server
+    :rtype:     Flask
+    """
     server = Flask(__name__)
     server.register_blueprint(main)
     return server
