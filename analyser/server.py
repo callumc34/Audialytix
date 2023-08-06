@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import os
+import os, os.path
 
 from dotenv import load_dotenv
 from flask import Flask
+from tempfile import gettempdir
 
 from controllers.main import main
 
@@ -23,7 +24,15 @@ def create_server() -> Flask:
     :rtype:     Flask
     """
     server = Flask(__name__)
+    server.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+    server.config["UPLOAD_FOLDER"] = os.path.join(
+        gettempdir(), "analyser"
+    )
+    if not os.path.exists(server.config["UPLOAD_FOLDER"]):
+        os.makedirs(server.config["UPLOAD_FOLDER"])
+
     server.register_blueprint(main)
+
     return server
 
 
