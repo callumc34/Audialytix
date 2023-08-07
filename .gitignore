@@ -3,3 +3,6 @@
 
 # Python cache generation
 __pycache__
+
+# Environment files
+.env
