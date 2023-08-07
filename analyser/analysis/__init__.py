@@ -1,4 +1,5 @@
-from . import onset, spectral
+from .onset import OnsetAnalyser
+from .spectral import SpectralAnalyser
 
 
 def analyse_file(filename: str, options: dict) -> dict:
@@ -13,10 +14,10 @@ def analyse_file(filename: str, options: dict) -> dict:
     """
 
     return {
-        "onset": onset.analyse(filename)
+        "onset": OnsetAnalyser(filename)()
         if options.get("onset")
         else None,
-        "spectral": spectral.analyse(filename)
+        "spectral": SpectralAnalyser(filename)()
         if options.get("spectral")
         else None,
     }

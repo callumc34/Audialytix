@@ -1,8 +1,13 @@
-from .analyser import AnalyseThread
+from .threads import AnalyseThread
 
 import os, os.path
 
-from flask import Blueprint, current_app, request
+from flask import (
+    Blueprint,
+    current_app,
+    request,
+    copy_current_request_context,
+)
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 
@@ -33,6 +38,15 @@ def handle_exception(e: Exception) -> tuple:
 
 @main.route("/analyse", methods=["POST"])
 def analyse():
+    @copy_current_request_context
+    def cleanup(result: dict, filename: str) -> None:
+        with current_app.app_context():
+            os.remove(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"], filename
+                )
+            )
+
     filename = secure_filename(request.files["file"].filename)
     file_path = os.path.join(
         current_app.config["UPLOAD_FOLDER"], filename
@@ -48,9 +62,7 @@ def analyse():
     results = AnalyseThread(
         file_path,
         options,
-        lambda: os.remove(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
-        ),
+        lambda result: cleanup(result, filename),
     ).start()
 
     return "OK", 200

@@ -1,25 +1,44 @@
-from essentia import Pool, run
-from essentia.streaming import *
+from ..runner import StereoRunner
+
+from essentia import Pool
+from essentia.streaming import (
+    CartesianToPolar,
+    FFT,
+    FrameCutter,
+    Windowing,
+    Spectrum,
+    SpectralComplexity,
+    _StreamConnector,
+)
 
 
-def analyse(
-    filename: str, frame_size: int = 1024, hop_size: int = 512
-) -> Pool:
-    loader = MonoLoader(filename=filename)
-    frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
-    w = Windowing()
-    spec = Spectrum()
+class SpectralAnalyser(StereoRunner):
+    def __init__(
+        self, filename: str, frame_size: int = 1024, hop_size: int = 512
+    ):
+        super().__init__(
+            filename, frame_size=frame_size, hop_size=hop_size
+        )
 
-    complexity = SpectralComplexity()
+        self._configure()
 
-    pool = Pool()
+    def _analyse(
+        self,
+        audio_source: _StreamConnector,
+        pool: Pool,
+        frame_size: int = 1024,
+        hop_size: int = 512,
+    ) -> None:
+        frameCutter = FrameCutter(
+            frameSize=frame_size, hopSize=hop_size
+        )
+        w = Windowing()
+        spec = Spectrum()
 
-    loader.audio >> frameCutter.signal
-    frameCutter.frame >> w.frame >> spec.frame
-    spec.spectrum >> complexity.spectrum
+        complexity = SpectralComplexity()
 
-    complexity.spectralComplexity >> (pool, "complexity")
+        audio_source >> frameCutter.signal
+        frameCutter.frame >> w.frame >> spec.frame
+        spec.spectrum >> complexity.spectrum
 
-    run(loader)
-
-    return pool
+        complexity.spectralComplexity >> (pool, "complexity")

@@ -1,56 +1,54 @@
-from essentia import Pool, run
+from ..runner import StereoRunner
+
+from essentia import Pool
 from essentia.streaming import (
-    MonoLoader,
+    CartesianToPolar,
+    FFT,
     FrameCutter,
+    MonoLoader,
     OnsetDetection,
     Windowing,
-    FFT,
-    CartesianToPolar,
+    _StreamConnector,
 )
 
 
-def analyse(
-    filename: str, frame_size: int = 1024, hop_size: int = 512
-) -> Pool:
-    """
-    Perform onset detection on the file and return the results in a pool.
+class OnsetAnalyser(StereoRunner):
+    def __init__(
+        self, filename: str, frame_size: int = 1024, hop_size: int = 512
+    ):
+        super().__init__(
+            filename, frame_size=frame_size, hop_size=hop_size
+        )
 
-    :param      file:       The file
-    :type       file:       str
-    :param      frameSize:  The frame size
-    :type       frameSize:  int
-    :param      hopSize:    The hop size
-    :type       hopSize:    int
+        self._configure()
 
-    :returns:   Pool of the onset detection values.
-    :rtype:     Pool
-    """
-    loader = MonoLoader(filename=filename)
-    frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
+    def _analyse(
+        self,
+        audio_source: _StreamConnector,
+        pool: Pool,
+        frame_size: int = 1024,
+        hop_size: int = 512,
+    ) -> None:
+        frameCutter = FrameCutter(
+            frameSize=frame_size, hopSize=hop_size
+        )
 
-    w = Windowing(type="hann")
-    fft = FFT()
-    c2p = CartesianToPolar()
+        w = Windowing(type="hann")
+        fft = FFT()
+        c2p = CartesianToPolar()
 
-    od_hfc = OnsetDetection(method="hfc")
-    od_complex = OnsetDetection(method="complex")
+        od_hfc = OnsetDetection(method="hfc")
+        od_complex = OnsetDetection(method="complex")
 
-    pool = Pool()
+        # Connect the algorithms
+        audio_source >> frameCutter.signal
+        frameCutter.frame >> w.frame >> fft.frame
+        fft.fft >> c2p.complex
 
-    # Connect the algorithms
+        c2p.magnitude >> od_hfc.spectrum
+        c2p.phase >> od_hfc.phase
+        c2p.magnitude >> od_complex.spectrum
+        c2p.phase >> od_complex.phase
 
-    loader.audio >> frameCutter.signal
-    frameCutter.frame >> w.frame >> fft.frame
-    fft.fft >> c2p.complex
-
-    c2p.magnitude >> od_hfc.spectrum
-    c2p.phase >> od_hfc.phase
-    c2p.magnitude >> od_complex.spectrum
-    c2p.phase >> od_complex.phase
-
-    od_hfc.onsetDetection >> (pool, "od.hfc")
-    od_complex.onsetDetection >> (pool, "od.complex")
-
-    run(loader)
-
-    return pool
+        od_hfc.onsetDetection >> (pool, "od.hfc")
+        od_complex.onsetDetection >> (pool, "od.complex")

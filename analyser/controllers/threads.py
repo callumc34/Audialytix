@@ -1,4 +1,3 @@
-from analysis.onset import analyse
 from analysis import analyse_file
 
 import threading
