@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        <title>{% block title %}Audialytix{% endblock title %}</title>
+        <meta name="description" content="Audio analysis and viewing site.">
+        <meta name="author" content="Callum C">
+
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    </head>
+
+    <body>
+        <div>
+            {% block content %}
+            <p>Default content...</p>
+            {% endblock content %}
+        </div>
+    </body>
+</html>
