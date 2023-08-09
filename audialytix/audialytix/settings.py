@@ -93,8 +93,6 @@ DATABASES = {
             "port": int(os.environ.get("MONGO_PORT", 27017)),
             "username": os.environ["MONGO_USERNAME"],
             "password": os.environ["MONGO_PASSWORD"],
-            # "authSource": os.environ.get("MONGO_AUTH_SOURCE", "admin"),
-            # "authMechanism": os.environ.get("MONGO_AUTH_MECHANISM", "SCRAM-SHA-256"),
         },
     }
 }
