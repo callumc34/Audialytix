@@ -66,6 +66,11 @@ async def analyse():
     return "OK", 200
 
 
+@main.route("/alive")
+def alive():
+    return "OK", 200
+
+
 @main.route("/*")
 def all():
     return "Not a valid route.", 400

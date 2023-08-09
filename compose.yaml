@@ -1,0 +1,76 @@
+services:
+  db:
+    build:
+      context: db
+    restart: always
+    healthcheck:
+      test: ["CMD","mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - backnet
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=development-audialytix-root
+      - MONGO_INITDB_ROOT_PASSWORD=insecure-login
+      - MONGO_INITDB_DATABASE=audialytix
+    expose:
+      - 27017
+
+  analyser:
+    build:
+      context: analyser
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost:8000/alive || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backnet
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=False
+    expose:
+      - 8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  website:
+    build:
+      context: audialytix
+    restart: always
+    healthcheck:
+      test: curl --fail http://localhost || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - backnet
+      - outside
+    environment:
+      - PORT=80
+      - HOST=0.0.0.0
+      - DJANGO_SECRET_KEY="django-insecure-#6l*)qe#e-qq#kf@18m(e-34tg7^pikd81v0(+vupy)w%7mlln"
+      - DJANGO_DEBUG=False
+      - MONGO_HOST=mongodb://127.0.0.1:27017
+      - MONGO_PORT=27017
+      - MONGO_USERNAME=development-audialytix-root
+      - MONGO_PASSWORD=insecure-login
+    ports:
+      - 80:80
+    depends_on:
+      db:
+        condition: service_healthy
+      analyser:
+        condition: service_healthy
+
+networks:
+  backnet:
+    external: false
+  outside:
