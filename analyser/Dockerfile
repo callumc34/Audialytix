@@ -13,4 +13,4 @@ WORKDIR /analyser/
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT uvicorn server:app --reload --port $PORT --host 0.0.0.0 --log-level info
