@@ -1,15 +1,9 @@
 from essentia import Pool, run
-from essentia.streaming import (
-    AudioLoader,
-    StereoDemuxer,
-    _StreamConnector,
-)
+from essentia.streaming import AudioLoader, StereoDemuxer, _StreamConnector
 
 
 class _Runner:
-    def __init__(
-        self, filename: str, frame_size: int = 1024, hop_size: int = 512
-    ):
+    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
         self._filename = filename
         self._frame_size = frame_size
         self._hop_size = hop_size
@@ -39,17 +33,13 @@ class _Runner:
 
 
 class MonoRunner(_Runner):
-    def __init__(
-        self, filename: str, frame_size: int = 1024, hop_size: int = 512
-    ):
+    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
         super().__init__(filename)
 
         self._loader = AudioLoader(filename=self._filename)
 
     def _configure(self):
-        def wrapper(
-            frame_size: int = 1024, hop_size: int = 512
-        ) -> None:
+        def wrapper(frame_size: int = 1024, hop_size: int = 512) -> None:
             self._analyse(
                 self._loader.audio,
                 self._pool,
@@ -61,9 +51,7 @@ class MonoRunner(_Runner):
 
 
 class StereoRunner(_Runner):
-    def __init__(
-        self, filename: str, frame_size: int = 1024, hop_size: int = 512
-    ):
+    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
         super().__init__(filename)
 
         self._loader = AudioLoader(filename=self._filename)

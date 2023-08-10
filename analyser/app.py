@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-from controllers.main import main
-
-import os, os.path
+import os
+import os.path
+from tempfile import gettempdir
 
 from asgiref.wsgi import WsgiToAsgi
+from controllers.main import main
 from dotenv import load_dotenv
 from flask import Flask
-from tempfile import gettempdir
 
 # Setup development env variables
 load_dotenv()
@@ -27,9 +27,7 @@ def create_app() -> Flask:
     server = Flask(__name__)
     server.config["DEBUG"] = DEBUG
     server.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
-    server.config["UPLOAD_FOLDER"] = os.path.join(
-        gettempdir(), "analyser"
-    )
+    server.config["UPLOAD_FOLDER"] = os.path.join(gettempdir(), "analyser")
     if not os.path.exists(server.config["UPLOAD_FOLDER"]):
         os.makedirs(server.config["UPLOAD_FOLDER"])
 

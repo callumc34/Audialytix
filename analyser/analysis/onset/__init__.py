@@ -1,9 +1,7 @@
-from ..runner import StereoRunner
-
 from essentia import Pool
 from essentia.streaming import (
-    CartesianToPolar,
     FFT,
+    CartesianToPolar,
     FrameCutter,
     MonoLoader,
     OnsetDetection,
@@ -11,14 +9,12 @@ from essentia.streaming import (
     _StreamConnector,
 )
 
+from ..runner import StereoRunner
+
 
 class OnsetAnalyser(StereoRunner):
-    def __init__(
-        self, filename: str, frame_size: int = 1024, hop_size: int = 512
-    ):
-        super().__init__(
-            filename, frame_size=frame_size, hop_size=hop_size
-        )
+    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
+        super().__init__(filename, frame_size=frame_size, hop_size=hop_size)
 
         self._configure()
 
@@ -29,9 +25,7 @@ class OnsetAnalyser(StereoRunner):
         frame_size: int = 1024,
         hop_size: int = 512,
     ) -> None:
-        frameCutter = FrameCutter(
-            frameSize=frame_size, hopSize=hop_size
-        )
+        frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
 
         w = Windowing(type="hann")
         fft = FFT()
