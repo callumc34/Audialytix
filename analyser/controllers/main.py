@@ -4,11 +4,12 @@ import os.path
 import uuid
 from functools import partial
 
-from flask import Blueprint, copy_current_request_context, current_app, request
+from flask import Blueprint, current_app, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 
 from .tasks import analyse_task
+from .utils import cleanup_analysis, parse_analysis_form
 
 main = Blueprint("main", __name__)
 
@@ -35,13 +36,14 @@ async def handle_exception(e: Exception) -> tuple:
     return "Internal server error.", 500
 
 
-def cleanup(file_path: str, future: asyncio.Future) -> None:
-    os.remove(file_path)
-    os.rmdir(os.path.dirname(file_path))
-
-
 @main.route("/analyse", methods=["POST"])
-async def analyse():
+async def analyse() -> tuple:
+    """
+    Request handler for analysing a posted file
+
+    :returns:   HttpResponse OK
+    :rtype:     tuple
+    """
     folder = os.path.join(current_app.config["UPLOAD_FOLDER"], str(uuid.uuid4().hex))
     filename = secure_filename(request.files["file"].filename)
     file_path = os.path.join(folder, filename)
@@ -49,23 +51,31 @@ async def analyse():
     os.mkdir(folder)
     request.files["file"].save(file_path)
 
-    options = {
-        "onset": request.form.get("onset", "False").casefold() in ("true", "1", "on"),
-        "spectral": request.form.get("spectral", "False").casefold()
-        in ("true", "1", "on"),
-    }
+    options = parse_analysis_form(request.form.to_dict())
 
     task = asyncio.create_task(analyse_task(file_path, options))
-    task.add_done_callback(partial(cleanup, file_path))
+    task.add_done_callback(partial(cleanup_analysis, file_path))
 
     return "OK", 200
 
 
 @main.route("/alive")
-def alive():
+def alive() -> tuple:
+    """
+    Health check for the server.
+
+    :returns:   HttpResponse alive
+    :rtype:     tuple
+    """
     return "OK", 200
 
 
 @main.route("/*")
-def all():
+def all() -> tuple:
+    """
+    Catch all route.
+
+    :returns:   HttpResponse not valid route
+    :rtype:     tuple
+    """
     return "Not a valid route.", 400

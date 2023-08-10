@@ -9,40 +9,46 @@ from essentia.streaming import (
     _StreamConnector,
 )
 
-from ..runner import StereoRunner
 
+def onset_analysis(
+    audio_source: _StreamConnector,
+    pool: Pool,
+    frame_size: int = 1024,
+    hop_size: int = 512,
+) -> None:
+    """
+    Perform onset analysis on a file.
 
-class OnsetAnalyser(StereoRunner):
-    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
-        super().__init__(filename, frame_size=frame_size, hop_size=hop_size)
+    :param      audio_source:  The audio source
+    :type       audio_source:  _StreamConnector
+    :param      pool:          The pool
+    :type       pool:          Pool
+    :param      frame_size:    The frame size
+    :type       frame_size:    int
+    :param      hop_size:      The hop size
+    :type       hop_size:      int
 
-        self._configure()
+    :returns:   Nothing
+    :rtype:     None
+    """
+    frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
 
-    def _analyse(
-        self,
-        audio_source: _StreamConnector,
-        pool: Pool,
-        frame_size: int = 1024,
-        hop_size: int = 512,
-    ) -> None:
-        frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
+    w = Windowing(type="hann")
+    fft = FFT()
+    c2p = CartesianToPolar()
 
-        w = Windowing(type="hann")
-        fft = FFT()
-        c2p = CartesianToPolar()
+    od_hfc = OnsetDetection(method="hfc")
+    od_complex = OnsetDetection(method="complex")
 
-        od_hfc = OnsetDetection(method="hfc")
-        od_complex = OnsetDetection(method="complex")
+    # Connect the algorithms
+    audio_source >> frameCutter.signal
+    frameCutter.frame >> w.frame >> fft.frame
+    fft.fft >> c2p.complex
 
-        # Connect the algorithms
-        audio_source >> frameCutter.signal
-        frameCutter.frame >> w.frame >> fft.frame
-        fft.fft >> c2p.complex
+    c2p.magnitude >> od_hfc.spectrum
+    c2p.phase >> od_hfc.phase
+    c2p.magnitude >> od_complex.spectrum
+    c2p.phase >> od_complex.phase
 
-        c2p.magnitude >> od_hfc.spectrum
-        c2p.phase >> od_hfc.phase
-        c2p.magnitude >> od_complex.spectrum
-        c2p.phase >> od_complex.phase
-
-        od_hfc.onsetDetection >> (pool, "od.hfc")
-        od_complex.onsetDetection >> (pool, "od.complex")
+    od_hfc.onsetDetection >> (pool, "od.hfc")
+    od_complex.onsetDetection >> (pool, "od.complex")

@@ -9,30 +9,36 @@ from essentia.streaming import (
     _StreamConnector,
 )
 
-from ..runner import StereoRunner
 
+def spectral_analysis(
+    audio_source: _StreamConnector,
+    pool: Pool,
+    frame_size: int = 1024,
+    hop_size: int = 512,
+) -> None:
+    """
+    Perform spectral analysis on a file.
 
-class SpectralAnalyser(StereoRunner):
-    def __init__(self, filename: str, frame_size: int = 1024, hop_size: int = 512):
-        super().__init__(filename, frame_size=frame_size, hop_size=hop_size)
+    :param      audio_source:  The audio source
+    :type       audio_source:  _StreamConnector
+    :param      pool:          The pool
+    :type       pool:          Pool
+    :param      frame_size:    The frame size
+    :type       frame_size:    int
+    :param      hop_size:      The hop size
+    :type       hop_size:      int
 
-        self._configure()
+    :returns:   Nothing
+    :rtype:     None
+    """
+    frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
+    w = Windowing()
+    spec = Spectrum()
 
-    def _analyse(
-        self,
-        audio_source: _StreamConnector,
-        pool: Pool,
-        frame_size: int = 1024,
-        hop_size: int = 512,
-    ) -> None:
-        frameCutter = FrameCutter(frameSize=frame_size, hopSize=hop_size)
-        w = Windowing()
-        spec = Spectrum()
+    complexity = SpectralComplexity()
 
-        complexity = SpectralComplexity()
+    audio_source >> frameCutter.signal
+    frameCutter.frame >> w.frame >> spec.frame
+    spec.spectrum >> complexity.spectrum
 
-        audio_source >> frameCutter.signal
-        frameCutter.frame >> w.frame >> spec.frame
-        spec.spectrum >> complexity.spectrum
-
-        complexity.spectralComplexity >> (pool, "complexity")
+    complexity.spectralComplexity >> (pool, "complexity")
