@@ -1,0 +1,45 @@
+{% extends '_base.html' %} {% load static %} {% load compress %} {%
+block head %} {% compress css %}
+<link
+    type="text/x-scss"
+    href="{% static 'css/index.scss' %}"
+    rel="stylesheet"
+    media="screen"
+/>
+{% endcompress %} {% compress js %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endcompress %} {%endblock head %} {% block header %} {% comment %}
+Intentionally empty to block header {% endcomment %} {% endblock header
+%} {% block content %}
+<div class="fill-100percent center-parent">
+    <div id="index-form" class="center-child">
+        <header>
+            <img
+                id="index-logo"
+                src="{% static 'images/logo/highres/nobackground/logo.svg' %}"
+                alt="Audialytix logo"
+            />
+        </header>
+        <main>
+            <div class="fill-100percent">
+                <input type="text" placeholder="Search audialytix..." />
+                <input type="button" value="Search" />
+            </div>
+            <div class="fill-100percent">
+                <a href="{% url 'home' %}">View All</a>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock content %} {% block footer %}
+<footer>
+    <p>
+        View on
+        <a
+            target="_blank"
+            href="https://github.com/callumc34/audialytix"
+            >GitHub <i class="github icon"></i
+        ></a>
+    </p>
+</footer>
+{% endblock footer %}

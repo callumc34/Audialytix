@@ -1,7 +1,115 @@
-@import url('https://fonts.googleapis.com/css2?family=Lekton:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lekton:ital,wght@0,400;0,700;1,400&family=Raleway:ital,wght@0,400;0,700;1,400&display=swap');
 
 // Variables
 
-$dark-blue: #010c80;
+// Colors
 $light-blue: #77d4fc;
+$medium-blue: #3c8efc;
+$dark-blue: #010c80;
+$grey: #fbfbfb;
 $white: #ffffff;
+$light-black: #1f1f1f;
+$black: #000000;
+
+// Font sizes
+$base-font-size: 18px;
+
+$base-header-font-size: 100%;
+$heading-scale: 50;
+
+// Mixins
+
+@mixin center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin fill-parent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@mixin fill-100percent {
+    width: 100%;
+    height: 100%;
+}
+
+// Base styling
+
+body {
+    font-family: 'Raleway', sans-serif;
+
+    width: 100vw;
+    height: 100vh;
+
+    font-size: $base-font-size;
+
+    > div {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+a {
+    color: $medium-blue;
+
+    transition: all 0.4s ease-out;
+
+    &:hover {
+        color: $dark-blue;
+    }
+}
+
+input,
+button,
+div.selection {
+    padding: 8px;
+
+    background-color: $grey;
+    border-radius: 5px !important;
+    border: 2px solid $dark-blue !important;
+
+    transition: all 0.4s ease-out !important;
+}
+
+input[type='button'],
+button {
+    &:hover {
+        background-color: $dark-blue;
+        color: $white;
+
+        cursor: pointer;
+    }
+}
+
+// Classes
+
+.fill-parent {
+    @include fill-parent;
+}
+
+.fill-100percent {
+    @include fill-100percent;
+}
+
+.center-parent {
+    position: relative;
+}
+
+.center-child {
+    @include center;
+}
+
+// Methods
+
+@for $i from 1 through 6 {
+    h#{$i} {
+        font-style: 'Lekton', sans-serif;
+        font-size: $base-header-font-size + $heading-scale * (6 - $i);
+    }
+}

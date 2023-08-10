@@ -30,14 +30,22 @@
             rel="stylesheet"
             media="screen"
         />
-        {% endcompress %}
+        {% endcompress %} {% block head %} {% endblock head %}
     </head>
 
     <body>
+        {% block header %}
+        <div></div>
+        {% endblock header %}
+
         <div>
             {% block content %}
             <p>Default content...</p>
             {% endblock content %}
         </div>
+
+        {% block footer %}
+        <div></div>
+        {% endblock footer %}
     </body>
 </html>

@@ -1,0 +1,99 @@
+@import 'base';
+
+header {
+    width: 50vw;
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    width: 100vw;
+
+    font-size: 150%;
+
+    p {
+        text-align: center;
+    }
+}
+
+#index-form {
+    main {
+        width: 50vw;
+
+        text-align: center;
+
+        input[type='text'] {
+            width: 30%;
+        }
+
+        input[type='button'] {
+            width: 20%;
+        }
+
+        div {
+            margin: 8px;
+
+            a {
+                font-size: 150%;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 680px) {
+    header,
+    #index-form {
+        width: 75vw;
+
+        main {
+            width: 75vw;
+
+            input[type='text'] {
+                width: 65%;
+            }
+
+            input[type='button'] {
+                width: 30%;
+            }
+        }
+    }
+
+    input {
+        font-size: 24px;
+    }
+
+    input[type='text'] {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    header,
+    #index-form {
+        width: 90vw;
+
+        main {
+            width: 90vw;
+
+            input[type='text'] {
+                width: 70%;
+            }
+
+            input[type='button'] {
+                margin-top: 8px;
+                width: 70%;
+            }
+        }
+    }
+
+    input {
+        font-size: 16px;
+    }
+}
