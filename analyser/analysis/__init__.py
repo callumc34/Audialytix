@@ -2,24 +2,22 @@ from .onset import OnsetAnalyser
 from .spectral import SpectralAnalyser
 
 
-def analyse_file(filename: str, options: dict) -> dict:
+def analyse_file(filename: str, **kwargs) -> dict:
     """
-    Analyse the given file.
+    Analyse the given file and return the results as a dictionary.
 
-    :param      options:  The options
-    :type       options:  dict
+    :param      filename:  The filename
+    :type       filename:  str
+    :param      kwargs:    The algorithms to analyse with
+    :type       kwargs:    dictionary
 
-    :returns:   The analysis results.
+    :returns:   The result of the analysis
     :rtype:     dict
     """
 
     return {
-        "onset": OnsetAnalyser(filename)()
-        if options.get("onset")
-        else None,
-        "spectral": SpectralAnalyser(filename)()
-        if options.get("spectral")
-        else None,
+        "onset": OnsetAnalyser(filename)() if kwargs.get("onset") else None,
+        "spectral": SpectralAnalyser(filename)() if kwargs.get("spectral") else None,
     }
 
 
