@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Audialytix apps
     "pages",
+    # Third party
+    "compressor",
 ]
 
 MIDDLEWARE = [
@@ -145,10 +147,17 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_FINDERS = ("compressor.finders.CompressorFinder",)
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+)
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Compressors
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+
 COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
 
 # Default primary key field type

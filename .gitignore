@@ -6,3 +6,6 @@ __pycache__
 
 # Environment files
 .env
+
+# Static web files
+audialytix/staticfiles
