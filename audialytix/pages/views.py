@@ -10,3 +10,8 @@ class IndexPageView(View):
 class HomePageView(View):
     async def get(self, request, *args, **kwargs):
         return render(request, "pages/home.html", context=None)
+
+
+class UploadPageView(View):
+    async def get(self, request, *args, **kwargs):
+        return render(request, "pages/upload.html", context=None)

@@ -3,9 +3,7 @@ const transition_page = (url) => {
         animation: 'scale',
         duration: '1000ms',
 
-        onComplete: () =>
-            (window.location =
-                $('a')[0].href + '?search=' + $('input')[0].value),
+        onComplete: () => (window.location = url),
     });
 };
 

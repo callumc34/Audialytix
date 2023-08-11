@@ -25,20 +25,47 @@
                   rel="stylesheet"
                   media="screen" />
         {% endcompress %}
+
         {% block head %}
         {% endblock head %}
     </head>
     <body>
         {% block header %}
-            <div></div>
+            {% compress js %}
+                <script src="{% static 'js/base.js' %}"></script>
+            {% endcompress %}
+
+            <header>
+                <section class="navigation">
+                  <div class="nav-container">
+                    <div class="brand">
+                        <img class="header-brand" src="{% static 'images/logo/highres/nobackground/logo.svg' %}" alt="Audialytix logo" />
+                    </div>
+                    <nav>
+                      <div class="nav-mobile">
+                        <a id="nav-toggle" href="#!"><span></span></a>
+                      </div>
+                      <ul class="nav-list">
+                        <li>
+                            <a {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %} href="#!" data-url="{% url 'home' %}">Files</a>
+                        </li>
+                        <li>
+                            <a {% if request.resolver_match.url_name == 'upload' %}class="active"{% endif %} href="#!" data-url="{% url 'upload' %}">Upload</a>
+                        </li>
+                      </ul>
+                    </nav>
+                    </div>
+                </section>
+            </header>
         {% endblock header %}
-        <div>
-            {% block content %}
-                <p>Default content...</p>
-            {% endblock content %}
-        </div>
+
+        {% block content %}
+            <p>Default content...</p>
+        {% endblock content %}
+
         {% block footer %}
-            <div></div>
+            <footer>
+            </footer>
         {% endblock footer %}
     </body>
 </html>
