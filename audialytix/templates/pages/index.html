@@ -1,8 +1,7 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load compress %}
-{%
-block head %}
+{% block head %}
 {% compress css %}
     <link type="text/x-scss"
           href="{% static 'css/index.scss' %}"
@@ -15,9 +14,9 @@ block head %}
 {% endblock head %}
 {% block header %}
     {% comment %}
-    Intentionally empty to block header {% endcomment %}
-{% endblock header
-%}
+        Intentionally empty to block header
+    {% endcomment %}
+{% endblock header %}
 {% block content %}
     <div class="fill-100percent center-parent">
         <div id="index-form" class="center-child">

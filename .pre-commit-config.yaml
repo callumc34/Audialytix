@@ -29,8 +29,7 @@ repos:
       hooks:
           - id: prettier
             types_or: [scss, javascript]
-    - repo: https://github.com/Riverside-Healthcare/djLint
-      rev: v1.32.1
+    - repo: https://github.com/thibaudcolas/curlylint
+      rev: v0.13.1
       hooks:
-          - id: djlint-django
-            args: [--reformat]
+          - id: curlylint
