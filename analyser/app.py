@@ -3,7 +3,6 @@ import os
 import os.path
 from tempfile import gettempdir
 
-from asgiref.wsgi import WsgiToAsgi
 from controllers.main import main
 from dotenv import load_dotenv
 from flask import Flask

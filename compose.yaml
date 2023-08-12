@@ -12,10 +12,7 @@ services:
             start_period: 10s
         networks:
             - backnet
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME=development-audialytix-root
-            - MONGO_INITDB_ROOT_PASSWORD=insecure-login
-            - MONGO_INITDB_DATABASE=audialytix
+        env_file: db/.env
         expose:
             - 27017
 
@@ -31,10 +28,7 @@ services:
             start_period: 5s
         networks:
             - backnet
-        environment:
-            - HOST=0.0.0.0
-            - PORT=8000
-            - DEBUG=False
+        env_file: analyser/.env
         expose:
             - 8000
         depends_on:
@@ -54,15 +48,7 @@ services:
         networks:
             - backnet
             - outside
-        environment:
-            - PORT=80
-            - HOST=0.0.0.0
-            - DJANGO_SECRET_KEY="django-insecure-#6l*)qe#e-qq#kf@18m(e-34tg7^pikd81v0(+vupy)w%7mlln"
-            - DJANGO_DEBUG=False
-            - MONGO_HOST=mongodb://db:27017
-            - MONGO_PORT=27017
-            - MONGO_USERNAME=development-audialytix-root
-            - MONGO_PASSWORD=insecure-login
+        env_file: audialytix/.env
         ports:
             - 80:80
         depends_on:
