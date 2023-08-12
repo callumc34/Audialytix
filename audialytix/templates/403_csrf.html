@@ -1,0 +1,28 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block title %}
+    403 - Forbidden
+{% endblock title %}
+
+{% block head %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/error.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+{% endblock head %}
+
+{% block content %}
+    <div class="center-parent">
+        <div class="center-child">
+            <h1>403 - Forbidden.</h1>
+            <p>Sorry, you are not authorized to perform this action. Check your CSRF token and try again.</p>
+            <div class="center-parent">
+                <input style="margin-top: 24px;" class="center-child" type="button" value="Return Home" onclick="window.location.href='{% url 'home' %}'" />
+            </div>
+        </div>
+    </div>
+{% endblock content %}

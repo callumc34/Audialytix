@@ -1,0 +1,13 @@
+@import 'base';
+
+body {
+    > div {
+        height: 90vh;
+
+        div {
+            margin-top: 12px;
+
+            text-align: center;
+        }
+    }
+}
