@@ -1,0 +1,14 @@
+.upload-form {
+    width: fit-content !important;
+    height: fit-content !important;
+
+    padding: 32px !important;
+}
+
+.close-button {
+    border-color: red !important;
+
+    &:hover {
+        background-color: red !important;
+    }
+}

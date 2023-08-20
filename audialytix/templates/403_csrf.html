@@ -16,13 +16,5 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="center-parent">
-        <div class="center-child">
-            <h1>403 - Forbidden.</h1>
-            <p>Sorry, you are not authorized to perform this action. Check your CSRF token and try again.</p>
-            <div class="center-parent">
-                <input style="margin-top: 24px;" class="center-child" type="button" value="Return Home" onclick="window.location.href='{% url 'home' %}'" />
-            </div>
-        </div>
-    </div>
+    {% include "sections/_site_message.html" with title="403 - Forbidden." message="Sorry, you are not authorized to perform this action. Check your CSRF token and try again." %}
 {% endblock content %}

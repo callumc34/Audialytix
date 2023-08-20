@@ -1,0 +1,75 @@
+{% load static %}
+{% load compress %}
+{% load sekizai_tags %}
+
+{% addtoblock "head" %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/sections/_upload.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'js/sections/_upload.js' %}"></script>
+    {% endcompress %}
+{% endaddtoblock %}
+
+<div class="ui card upload-form" >
+    <div class="ui form">
+        <h1 class="ui dividing header">
+            Upload a file
+        </h1>
+        <div class="two fields">
+            <div class="field">
+                <label>Artist</label>
+                <input type="text" name="artist" placeholder="Artist">
+            </div>
+            <div class="field">
+                <label>Song Name</label>
+                <input type="text" name="name" placeholder="Song Name">
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>File</label>
+                <input type="file" name="file" accept="audio/*" id="file-input">
+            </div>
+            <div class="field">
+                <label>Stereo/Mono</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="stereo" value="Stereo">
+                    <div class="default text">Stereo/Mono</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="Stereo">
+                            <i class="headphones icon"></i>
+                            Stereo
+                        </div>
+                        <div class="item" data-value="Mono">
+                            <i class="headphones icon"></i>
+                            Mono
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <label>Onset Analysis</label>
+                    <input type="checkbox" name="onset" tabindex="0" class="hidden" checked>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui toggle checkbox">
+                    <label>Spectral Analysis</label>
+                    <input type="checkbox" name="spectral" tabindex="0" class="hidden" checked>
+                </div>
+            </div>
+        </div>
+        <input class="submit-button" type="button" value="Submit">
+        {% if hideable %}
+            <input class="close-button" type="button" value="Close">
+        {% endif %}
+    </div>
+</div>

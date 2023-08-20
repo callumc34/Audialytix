@@ -1,12 +1,29 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load compress%}
+
 {% block title %}
     Upload a file
 {% endblock title %}
+
 {% block head %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/upload.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'js/upload.js' %}"></script>
+    {% endcompress %}
 {% endblock head %}
+
 {% block content %}
-    <div>
-        <p>Audialytix is an audio analysis website.</p>
-    </div>
+    <main>
+        <div class="fill-100percent center-parent">
+            <div class="center-child">
+                {% include "sections/_upload.html" with hideable=True %}
+            </div>
+        </div>
+    </main>
 {% endblock content %}

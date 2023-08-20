@@ -1,5 +1,7 @@
 {% load static %}
 {% load compress %}
+{% load sekizai_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -31,41 +33,20 @@
     </head>
     <body>
         {% block header %}
-            {% compress js %}
-                <script src="{% static 'js/base.js' %}"></script>
-            {% endcompress %}
-
-            <header>
-                <section class="navigation">
-                  <div class="nav-container">
-                    <div class="brand">
-                        <img class="header-brand" src="{% static 'images/logo/highres/nobackground/logo.svg' %}" alt="Audialytix logo" />
-                    </div>
-                    <nav>
-                      <div class="nav-mobile">
-                        <a id="nav-toggle" href="#!"><span></span></a>
-                      </div>
-                      <ul class="nav-list">
-                        <li>
-                            <a {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %} href="#!" data-url="{% url 'home' %}">Files</a>
-                        </li>
-                        <li>
-                            <a {% if request.resolver_match.url_name == 'upload' %}class="active"{% endif %} href="#!" data-url="{% url 'upload' %}">Upload</a>
-                        </li>
-                      </ul>
-                    </nav>
-                    </div>
-                </section>
-            </header>
+            {% include "sections/_navbar.html" %}
         {% endblock header %}
 
         {% block content %}
-            <p>Default content...</p>
+            {% include "sections/_site_message.html" with title="There seems to be nothing here" message="This page doesn't seem to have any content." %}
         {% endblock content %}
 
         {% block footer %}
-            <footer>
-            </footer>
+            {% include "sections/_footer.html" %}
         {% endblock footer %}
     </body>
 </html>
+
+{% render_block "head" %}
+{% render_block "header" %}
+{% render_block "content" %}
+{% render_block "footer" %}

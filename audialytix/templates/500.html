@@ -16,13 +16,5 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="center-parent">
-        <div class="center-child">
-            <h1>Something went wrong.</h1>
-            <p>Sorry, something went wrong on our end. Please try again later.</p>
-            <div class="center-parent">
-                <input style="margin-top: 24px;" class="center-child" type="button" value="Return Home" onclick="window.location.href='{% url 'home' %}'" />
-            </div>
-        </div>
-    </div>
+    {% include "sections/_site_message.html" with title="Something went wrong." message="Sorry, something went wrong on our end. Please try again later." %}
 {% endblock content %}
