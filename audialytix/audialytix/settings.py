@@ -39,6 +39,7 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False").casefold() in [
 
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
+ANALYSER_HOST = os.environ.get("ANALYSER_HOST", "http://127.0.0.1:8080")
 
 # Application definition
 
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     # Audialytix apps
     "api",
     "pages",
+    "webhooks",
     # Third party
     "compressor",
     "sekizai",
@@ -110,6 +112,10 @@ DATABASES = {
             "password": os.environ["MONGO_PASSWORD"],
         },
     }
+}
+
+WEBHOOKS = {
+    "results": "webhooks/results",
 }
 
 

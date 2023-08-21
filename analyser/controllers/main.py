@@ -9,7 +9,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 
 from .tasks import analyse_task
-from .utils import cleanup_analysis, parse_analysis_form
+from .utils import cleanup_analysis, parse_analysis_form, return_results
 
 main = Blueprint("main", __name__)
 
@@ -44,17 +44,19 @@ async def analyse() -> tuple:
     :returns:   HttpResponse OK
     :rtype:     tuple
     """
+
     folder = os.path.join(current_app.config["UPLOAD_FOLDER"], str(uuid.uuid4().hex))
     filename = secure_filename(request.files["file"].filename)
     file_path = os.path.join(folder, filename)
 
-    os.mkdir(folder)
+    os.makedirs(folder, exist_ok=True)
     request.files["file"].save(file_path)
 
     options = parse_analysis_form(request.form.to_dict())
 
     task = asyncio.create_task(analyse_task(file_path, options))
     task.add_done_callback(partial(cleanup_analysis, file_path))
+    task.add_done_callback(partial(return_results, options["webhook"]))
 
     return "OK", 200
 

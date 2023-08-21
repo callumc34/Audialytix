@@ -1,6 +1,6 @@
 const configureForm = () => {
     const form = $('.ui.form').form('get values');
-    form.stereo = form.stereo === 'Stereo';
+    form.analysis_type = form.analysis_type === 'Stereo';
     form.onset = form.onset === 'on';
     form.spectral = form.spectral === 'on';
 
@@ -22,7 +22,7 @@ const setupForm = () => {
 
     $('.ui.form').form({
         fields: {
-            artist: 'empty',
+            author: 'empty',
             name: 'empty',
             stereo: 'empty',
         },
