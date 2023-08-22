@@ -37,7 +37,7 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False").casefold() in [
     "on",
 ]
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "website"]
 
 ANALYSER_HOST = os.environ.get("ANALYSER_HOST", "http://127.0.0.1:8080")
 
@@ -115,6 +115,7 @@ DATABASES = {
 }
 
 WEBHOOKS = {
+    "host": os.environ.get("WEBHOOK_RETURN_HOST", "http://localhost:8000"),
     "results": "webhooks/results",
 }
 

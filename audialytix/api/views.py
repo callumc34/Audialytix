@@ -13,7 +13,9 @@ from .models import AudioAnalysis
 def save_audio_model(**kwargs) -> int:
     author = kwargs["author"][0]
     name = kwargs["name"][0]
-    analysis_type = "stereo" if kwargs["stereo"][0].casefold() == "true" else "mono"
+    analysis_type = (
+        "stereo" if kwargs["analysis_type"][0].casefold() == "true" else "mono"
+    )
 
     entry = AudioAnalysis(
         author=author,
@@ -51,8 +53,7 @@ async def upload(request, *args, **kwargs):
     response = await start_analysis(
         analysis_id,
         request.FILES["file"],
-        f"http://{current_host}/{settings.WEBHOOKS['results']}",
+        f"{settings.WEBHOOKS['host']}/{settings.WEBHOOKS['results']}",
         **request.POST,
     )
-
     return HttpResponse("Request received.")
