@@ -1,4 +1,3 @@
-from essentia import Pool
 from essentia.streaming import (
     FFT,
     CartesianToPolar,
@@ -6,13 +5,12 @@ from essentia.streaming import (
     MonoLoader,
     OnsetDetection,
     Windowing,
-    _StreamConnector,
 )
 
 
 def onset_analysis(
-    audio_source: _StreamConnector,
-    pool: Pool,
+    audio_source: "essentia.streaming._StreamConnector",
+    pool: "essentia.Pool",
     frame_size: int = 1024,
     hop_size: int = 512,
 ) -> None:

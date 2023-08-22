@@ -8,8 +8,8 @@ from flask import Blueprint, current_app, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
 
-from .tasks import analyse_task
-from .utils import cleanup_analysis, parse_analysis_form, return_results
+from .tasks import analyse_task, return_results
+from .utils import cleanup_analysis, parse_analysis_form
 
 main = Blueprint("main", __name__)
 
@@ -53,10 +53,11 @@ async def analyse() -> tuple:
     request.files["file"].save(file_path)
 
     options = parse_analysis_form(request.form.to_dict())
+    webhook_options = {"webhook": options["webhook"], "id": options["id"]}
 
     task = asyncio.create_task(analyse_task(file_path, options))
     task.add_done_callback(partial(cleanup_analysis, file_path))
-    task.add_done_callback(partial(return_results, options["webhook"]))
+    task.add_done_callback(partial(return_results, webhook_options))
 
     return "OK", 200
 

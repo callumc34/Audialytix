@@ -3,8 +3,6 @@ import json
 import os
 import os.path
 
-import requests
-
 
 def cleanup_analysis(file_path: str, future: asyncio.Future) -> None:
     """
@@ -41,44 +39,3 @@ def parse_analysis_form(form: dict) -> dict:
             result[key] = value
 
     return result
-
-
-def pool_to_dict(pool: "essentia.Pool") -> dict:
-    """
-    Convert a pool to a dictionary.
-
-    :param      pool:  The pool
-    :type       pool:  Pool
-
-    :returns:   The dictionary of the pool
-    :rtype:     dict
-    """
-
-    result = {}
-
-    for descriptor in pool.descriptorNames():
-        result[descriptor] = pool[descriptor].tolist()
-
-    return result
-
-
-def return_results(webhook: str, future: asyncio.Future) -> None:
-    """
-    Returns results to a webhook.
-
-    :param      webhook:  The webhook
-    :type       webhook:  str
-    :param      future:   The future
-    :type       future:   Result of the analysis task
-
-    :returns:   Nothing
-    :rtype:     None
-    """
-
-    response = future.result()
-
-    json = {}
-    for key in response:
-        json[key] = pool_to_dict(response[key])
-
-    requests.post(webhook, json=json)

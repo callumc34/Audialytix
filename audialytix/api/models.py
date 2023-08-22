@@ -1,7 +1,7 @@
 from djongo import models
 
 
-class AudioAnalysis(models.Model):
+class AudioFile(models.Model):
     STEREO = "stereo"
     MONO = "mono"
     AUDIO_CHOICES = [
@@ -14,16 +14,31 @@ class AudioAnalysis(models.Model):
     author = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     analysis_type = models.CharField(max_length=10, choices=AUDIO_CHOICES)
-    audio_points = models.JSONField(
-        blank=True, default=[], null=True
-    )  # Assuming this stores an array of doubles
-
-    onset_analysis = models.JSONField(
-        blank=True, default=[], null=True
-    )  # Optional array of doubles
-    spectral_analysis = models.JSONField(
-        blank=True, default=[], null=True
-    )  # Optional array of doubles
 
     def __str__(self):
         return f"{self.author} - {self.name}"
+
+    def is_stereo(self):
+        return self.analysis_type == self.STEREO
+
+
+class OnsetData(models.Model):
+    onset_analysis = models.JSONField()
+
+    analysis = models.OneToOneField(
+        AudioFile, on_delete=models.CASCADE, primary_key=True
+    )
+
+    def __str__(self):
+        return str(self.analysis)
+
+
+class SpectralData(models.Model):
+    spectral_analysis = models.JSONField()
+
+    analysis = models.OneToOneField(
+        AudioFile, on_delete=models.CASCADE, primary_key=True
+    )
+
+    def __str__(self):
+        return str(self.analysis)

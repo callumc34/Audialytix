@@ -6,10 +6,9 @@ services:
         restart: always
         healthcheck:
             test: [CMD, mongosh, --eval, db.adminCommand('ping')]
-            interval: 30s
+            interval: 15s
             timeout: 10s
             retries: 5
-            start_period: 10s
         networks:
             - backnet
         env_file: db/.env
@@ -22,10 +21,9 @@ services:
         restart: always
         healthcheck:
             test: curl --fail http://localhost:8080/alive || exit 1
-            interval: 30s
+            interval: 15s
             timeout: 10s
             retries: 5
-            start_period: 5s
         networks:
             - backnet
         env_file: analyser/.env
@@ -41,10 +39,9 @@ services:
         restart: always
         healthcheck:
             test: curl --fail http://localhost || exit 1
-            interval: 30s
+            interval: 15s
             timeout: 10s
             retries: 5
-            start_period: 10s
         networks:
             - backnet
             - outside

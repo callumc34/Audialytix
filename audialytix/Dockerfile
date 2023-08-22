@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 ENTRYPOINT python manage.py migrate \
     && python manage.py collectstatic --noinput \
     && python manage.py compress \
-    && daphne audialytix.asgi:application -p $PORT -b $HOST
+    && uvicorn audialytix.asgi:application --reload --port $PORT --host $HOST

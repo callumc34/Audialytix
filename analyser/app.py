@@ -25,7 +25,7 @@ def create_app() -> Flask:
     """
     server = Flask(__name__)
     server.config["DEBUG"] = DEBUG
-    server.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+    server.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024 * 1024
     server.config["UPLOAD_FOLDER"] = os.path.join(gettempdir(), "analyser")
     if not os.path.exists(server.config["UPLOAD_FOLDER"]):
         os.makedirs(server.config["UPLOAD_FOLDER"])
