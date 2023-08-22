@@ -41,7 +41,7 @@ ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "website"]
 
 ANALYSER_HOST = os.environ.get("ANALYSER_HOST", "http://127.0.0.1:8080")
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 16 * 1024 * 1024 * 1024  # 16MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 512 * 1024 * 1024
 
 # Application definition
 

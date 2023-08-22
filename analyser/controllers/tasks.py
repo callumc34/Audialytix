@@ -39,6 +39,16 @@ def return_results(webhook_options: dict, future: asyncio.Future) -> None:
 
     url = webhook_options["webhook"]
     id = webhook_options["id"]
+
+    if future.cancelled():
+        requests.post(
+            url, json={"id": id, "error": "Analysis task was cancelled by the server."}
+        )
+        return
+    elif future.exception():
+        requests.post(url, json={"id": id, "error": str(future.exception())})
+        return
+
     response = future.result()
 
     json = {"id": id}

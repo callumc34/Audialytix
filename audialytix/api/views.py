@@ -52,7 +52,7 @@ async def start_analysis(analysis_id: int, file, webhook, **kwargs):
 @csrf_exempt
 @require_POST
 @async_to_sync
-async def upload(request, *args, **kwargs):
+async def upload(request):
     analysis_id = await save_audio_model(**request.POST)
 
     current_host = request.get_host()
@@ -64,3 +64,27 @@ async def upload(request, *args, **kwargs):
     )
 
     return HttpResponse("Request received.")
+
+
+async def status(request, **kwargs):
+    if "id" not in kwargs:
+        return HttpResponse("No ID provided.", status=400)
+
+    id = kwargs["id"]
+
+    try:
+        audio_model = await sync_to_async(AudioFile.objects.get)(id=id)
+    except:
+        return HttpResponse("ID not found.", status=400)
+
+    response = {}
+    failed = await sync_to_async(audio_model.failed)()
+    if failed:
+        response["status"] = "failed"
+        response["error"] = failed
+    elif await sync_to_async(audio_model.fulfilled)():
+        response["status"] = "fulfilled"
+    else:
+        response["status"] = "processing"
+
+    return HttpResponse(json.dumps(response))
