@@ -1,3 +1,23 @@
+const handleResponse = async (res) => {
+    $('.ui.form').removeClass('loading');
+    if (res.ok) return res.json();
+    return Promise.reject(res);
+};
+
+const handleId = async (json) => {
+    $('.ui.form').addClass('success');
+    id = json.id;
+
+    setTimeout(
+        () => (window.location.href = `/analysis?id=${id}`),
+        2000,
+    );
+};
+
+const handleError = async (res) => {
+    $('.ui.form').addClass('error');
+};
+
 const configureForm = () => {
     const form = $('.ui.form').form('get values');
     form.analysis_type = form.analysis_type === 'Stereo';
@@ -37,10 +57,14 @@ const setupForm = () => {
                 ]);
                 return;
             } else {
+                $('.ui.form').addClass('loading');
                 fetch('api/upload', {
                     method: 'POST',
                     body: configureForm(),
-                });
+                })
+                    .then(handleResponse)
+                    .then(handleId)
+                    .catch(handleError);
             }
         }
     });

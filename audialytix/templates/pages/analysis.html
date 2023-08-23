@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load compress%}
+
+{% block title %}
+    Upload a file
+{% endblock title %}
+
+{% block head %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/analysis.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'js/analysis.js' %}"></script>
+    {% endcompress %}
+{% endblock head %}
+
+{% block content %}
+    <main>
+        <div class="fill-100percent center-parent">
+            <div class="fill-100percent center-child">
+                {% if processing %}
+                    {% include "sections/_poll_until_processed.html" with id=id %}
+                {% else %}
+                    {% include "sections/_view_analysis.html" with id=id %}
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock content %}

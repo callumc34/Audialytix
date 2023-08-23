@@ -1,0 +1,52 @@
+{% load static %}
+{% load compress %}
+{% load sekizai_tags %}
+
+{% addtoblock "head" %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/sections/_view_analysis.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'js/sections/_view_analysis.js' %}">
+        </script>
+    {% endcompress %}
+
+    <script>
+        id={{ id }}
+    </script>
+{% endaddtoblock %}
+
+<div class="ui active dimmer inverted" id="loader">
+    <div class="ui massive blue indeterminate loader">
+    </div>
+</div>
+<div class="fill-100percent center-parent">
+    <div class="center-child ui raised card hidden" id="analysis-card">
+        <div class="content">
+            <div class="header" id="file-name">
+
+            </div>
+            <div class="meta" id="file-author">
+
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui selection dropdown channel">
+                <input type="hidden" name="Channel">
+                <i class="dropdown icon"></i>
+                <div class="default text">Channel</div>
+                <div class="menu" id="channel-menu">
+
+                </div>
+            </div>
+        </div>
+        {% if hideable %}
+            <div class="extra content">
+                <input class="close-button" type="button" value="Close">
+            </div>
+        {% endif %}
+    </div>
+</div>

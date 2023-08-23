@@ -30,6 +30,15 @@ class AudioFile(models.Model):
     def __str__(self):
         return f"{self.author} - {self.name}"
 
+    def analysis_items(self):
+        items = []
+        if hasattr(self, "onsetdata"):
+            items.append("onset")
+        if hasattr(self, "spectraldata"):
+            items.append("spectral")
+
+        return items
+
     def is_stereo(self):
         return self.analysis_type == self.STEREO
 

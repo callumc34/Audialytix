@@ -63,7 +63,7 @@ async def upload(request):
         **request.POST,
     )
 
-    return HttpResponse("Request received.")
+    return HttpResponse(json.dumps({"id": analysis_id}), status=200)
 
 
 async def status(request, **kwargs):
@@ -87,4 +87,24 @@ async def status(request, **kwargs):
     else:
         response["status"] = "processing"
 
-    return HttpResponse(json.dumps(response))
+    return HttpResponse(json.dumps(response), status=200)
+
+
+async def info(request, **kwargs):
+    if "id" not in kwargs:
+        return HttpResponse("No ID provided.", status=400)
+
+    id = kwargs["id"]
+
+    try:
+        audio_model = await sync_to_async(AudioFile.objects.get)(id=id)
+    except:
+        return HttpResponse("ID not found.", status=400)
+
+    response = {
+        "author": audio_model.author,
+        "name": audio_model.name,
+        "analysis_type": audio_model.analysis_type,
+        "analysis_items": await sync_to_async(audio_model.analysis_items)(),
+    }
+    return HttpResponse(json.dumps(response), status=200)

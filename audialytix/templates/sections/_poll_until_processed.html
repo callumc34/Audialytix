@@ -1,0 +1,26 @@
+{% load static %}
+{% load compress %}
+{% load sekizai_tags %}
+
+{% addtoblock "head" %}
+    {% compress css %}
+        <link type="text/x-scss"
+              href="{% static 'css/sections/_poll_until_processed.scss' %}"
+              rel="stylesheet"
+              media="screen" />
+    {% endcompress %}
+    {% compress js %}
+        <script src="{% static 'js/sections/_poll_until_processed.js' %}">
+        </script>
+    {% endcompress %}
+
+    <script>
+        id={{ id }}
+    </script>
+{% endaddtoblock %}
+
+<div class="ui active dimmer inverted">
+    <div class="ui massive blue indeterminate text loader">
+        This file is still being processed. Please wait and you will be redirected shortly.
+    </div>
+</div>
