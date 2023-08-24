@@ -1,19 +1,18 @@
 const selected = {
+    analysis: undefined,
     chartId: -1,
+    chartZoom: undefined,
+    channel: undefined,
 };
 
 const zoomIn = () => {
-    const currentZoom = $('#chart-area').css('width');
-    const newZoom =
-        Number(currentZoom.substr(0, currentZoom.length - 2)) + 250;
-    $('#chart-area').css('width', `${newZoom}px`);
+    selected.chartZoom += 25;
+    $('#chart-area').css('width', `${selected.chartZoom}%`);
 };
 
 const zoomOut = () => {
-    const currentZoom = $('#chart-area').css('width');
-    const newZoom =
-        Number(currentZoom.substr(0, currentZoom.length - 2)) - 250;
-    $('#chart-area').css('width', `${newZoom}px`);
+    selected.chartZoom -= 25;
+    $('#chart-area').css('width', `${selected.chartZoom}%`);
 };
 
 const getChartData = async (channel, analysis) => {
@@ -31,6 +30,11 @@ const loadChart = () => {
         .then((data) => {
             // TODO(Callum): Make this use the sample rate of the file
             const sampleRate = 44100 / 512;
+            const songLength = data.length / sampleRate;
+            console.log(songLength);
+
+            selected.chartZoom = data.length / 100;
+            $('#chart-area').css('width', `${selected.chartZoom}%`);
 
             const ctx = $('canvas')[0].getContext('2d');
             const chart = new Chart(ctx, {
@@ -59,11 +63,11 @@ const loadChart = () => {
                             radius: 0,
                             responsive: false,
                         },
-                        scales: {
-                            x: {
-                                ticks: {
-                                    sampleSize: sampleRate,
-                                },
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                maxTicksLimit: songLength / 5,
                             },
                         },
                     },
