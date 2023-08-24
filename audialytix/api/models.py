@@ -59,22 +59,18 @@ class AudioFile(models.Model):
 
 
 class OnsetData(models.Model):
-    onset_analysis = models.JSONField()
+    data = models.JSONField()
 
-    analysis = models.OneToOneField(
-        AudioFile, on_delete=models.CASCADE, primary_key=True
-    )
+    file = models.OneToOneField(AudioFile, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return str(self.analysis)
 
 
 class SpectralData(models.Model):
-    spectral_analysis = models.JSONField()
+    data = models.JSONField()
 
-    analysis = models.OneToOneField(
-        AudioFile, on_delete=models.CASCADE, primary_key=True
-    )
+    file = models.OneToOneField(AudioFile, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return str(self.analysis)

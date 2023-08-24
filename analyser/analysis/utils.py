@@ -12,7 +12,6 @@ def pool_to_dict(pool: "essentia.Pool") -> dict:
     result = {}
 
     for descriptor in pool.descriptorNames():
-        # TODO(Callum): Figure out why they are 2d arrays instead of 1d
-        result[descriptor] = pool[descriptor].tolist()[0]
+        result[descriptor] = pool[descriptor].tolist()
 
     return result

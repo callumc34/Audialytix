@@ -39,4 +39,4 @@ def spectral_analysis(
     frameCutter.frame >> w.frame >> spec.frame
     spec.spectrum >> complexity.spectrum
 
-    complexity.spectralComplexity >> (pool, "complexity")
+    complexity.spectralComplexity >> (pool, "spectral.complexity")

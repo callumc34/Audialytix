@@ -48,5 +48,5 @@ def onset_analysis(
     c2p.magnitude >> od_complex.spectrum
     c2p.phase >> od_complex.phase
 
-    od_hfc.onsetDetection >> (pool, "od.hfc")
-    od_complex.onsetDetection >> (pool, "od.complex")
+    od_hfc.onsetDetection >> (pool, "onset.hfc")
+    od_complex.onsetDetection >> (pool, "onset.complex")

@@ -132,11 +132,10 @@ class StereoRunner(_Runner):
 
     def __call__(self) -> Pool:
         run(self._loader)
-
         for key in self._left_pool.descriptorNames():
-            self._pool.add("left." + key, self._left_pool[key])
+            self._pool.merge("left." + key, self._left_pool[key], "replace")
 
         for key in self._right_pool.descriptorNames():
-            self._pool.add("right." + key, self._right_pool[key])
+            self._pool.merge("right." + key, self._right_pool[key], "replace")
 
         return self._pool

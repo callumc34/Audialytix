@@ -3,6 +3,8 @@
 {% load sekizai_tags %}
 
 {% addtoblock "head" %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3/dist/chart.umd.min.js"></script>
+
     {% compress css %}
         <link type="text/x-scss"
               href="{% static 'css/sections/_view_analysis.scss' %}"
@@ -23,30 +25,48 @@
     <div class="ui massive blue indeterminate loader">
     </div>
 </div>
-<div class="fill-100percent center-parent">
-    <div class="center-child ui raised card hidden" id="analysis-card">
-        <div class="content">
-            <div class="header" id="file-name">
+<div class="fill-100percent">
+    <div class="ui one cards hidden" id="analysis-view">
+        <div class="ui raised centered card" id="analysis-card">
+            <div class="content">
+                <div class="header" id="file-name">
 
-            </div>
-            <div class="meta" id="file-author">
-
-            </div>
-        </div>
-        <div class="content">
-            <div class="ui selection dropdown channel">
-                <input type="hidden" name="Channel">
-                <i class="dropdown icon"></i>
-                <div class="default text">Channel</div>
-                <div class="menu" id="channel-menu">
+                </div>
+                <div class="meta" id="file-author">
 
                 </div>
             </div>
-        </div>
-        {% if hideable %}
-            <div class="extra content">
-                <input class="close-button" type="button" value="Close">
+            <div class="content">
+                <div class="ui selection dropdown channel">
+                    <input type="hidden" name="Channel">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Channel</div>
+                    <div class="menu" id="channel-menu">
+
+                    </div>
+                </div>
             </div>
-        {% endif %}
+            <div class="content">
+                <div class="ui stackable buttons" id="analysis-buttons">
+                </div>
+            </div>
+            {% if hideable %}
+                <div class="extra content">
+                    <input class="close-button" type="button" value="Close">
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="ui raised centered fluid card" id="chart-card">
+            <div id="zoom">
+                <i class="search zoom icon" id="zoom-in"></i>
+                <i class="search zoom out icon" id="zoom-out"></i>
+            </div>
+            <div class="content">
+                <div id="chart-area" style="width: 500%;">
+                    <canvas id="chart" class="fill-100percent"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

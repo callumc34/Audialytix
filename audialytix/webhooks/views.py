@@ -17,13 +17,11 @@ def update_analysis_results(analysis_id: int, results: dict):
         return
 
     if "onset" in results:
-        onset_data = OnsetData(analysis=audio_model, onset_analysis=results["onset"])
+        onset_data = OnsetData(file=audio_model, data=results["onset"])
         onset_data.save()
 
     if "spectral" in results:
-        spectral_data = SpectralData(
-            analysis=audio_model, spectral_analysis=results["spectral"]
-        )
+        spectral_data = SpectralData(file=audio_model, data=results["spectral"])
         spectral_data.save()
 
 

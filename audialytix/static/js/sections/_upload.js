@@ -15,7 +15,10 @@ const handleId = async (json) => {
 };
 
 const handleError = async (res) => {
-    $('.ui.form').addClass('error');
+    $('.ui.form').removeClass('success');
+    $('.ui.form').form('add errors', [
+        'There was a problem processing your request.',
+    ]);
 };
 
 const configureForm = () => {
@@ -23,6 +26,12 @@ const configureForm = () => {
     form.analysis_type = form.analysis_type === 'Stereo';
     form.onset = form.onset === 'on';
     form.spectral = form.spectral === 'on';
+    if (!form.onset) {
+        delete form.onset;
+    }
+    if (!form.spectral) {
+        delete form.spectral;
+    }
 
     const formData = new FormData();
 
@@ -49,15 +58,25 @@ const setupForm = () => {
     });
 
     $('.submit-button').click(() => {
-        $('.ui.form').form('validate form');
-        if ($('.ui.form').form('is valid')) {
+        $form = $('.ui.form');
+        $form.form('validate form');
+        if ($form.form('is valid')) {
             if (!$('#file-input').val()) {
-                $('.ui.form').form('add errors', [
+                $form.form('add errors', [
                     'Please select a file to upload.',
                 ]);
                 return;
+            } else if (
+                Object.values(
+                    $form.form('get values', ['onset', 'spectral']),
+                ).every((val) => val === false)
+            ) {
+                $form.form('add errors', [
+                    'Please select at least one analysis type.',
+                ]);
+                return;
             } else {
-                $('.ui.form').addClass('loading');
+                $form.addClass('loading');
                 fetch('api/upload', {
                     method: 'POST',
                     body: configureForm(),

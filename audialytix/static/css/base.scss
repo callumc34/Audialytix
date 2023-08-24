@@ -40,6 +40,10 @@ $heading-scale: 50;
     height: 100%;
 }
 
+@mixin transition {
+    transition: all 0.4s ease-out;
+}
+
 // Base styling
 
 body {
@@ -60,9 +64,9 @@ body {
 }
 
 a {
-    color: $medium-blue;
+    @include transition;
 
-    transition: all 0.4s ease-out;
+    color: $medium-blue;
 
     &:hover {
         color: $dark-blue;
@@ -72,22 +76,32 @@ a {
 input,
 button,
 div.selection {
+    @include transition;
+
     padding: 8px;
 
-    background-color: $grey;
+    background-color: $grey !important;
     border-radius: 5px !important;
     border: 2px solid $dark-blue !important;
-
-    transition: all 0.4s ease-out !important;
 }
 
 input[type='button'],
 button {
     &:hover {
-        background-color: $dark-blue;
-        color: $white;
+        background-color: $dark-blue !important;
+        color: $white !important;
 
         cursor: pointer;
+    }
+}
+
+i {
+    @include transition;
+
+    color: $dark-blue;
+    cursor: pointer;
+    &:hover {
+        color: $light-blue !important;
     }
 }
 
@@ -95,6 +109,10 @@ footer {
 }
 
 // Classes
+
+.hidden {
+    display: none;
+}
 
 .fill-parent {
     @include fill-parent;

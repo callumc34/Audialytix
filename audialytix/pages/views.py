@@ -26,18 +26,20 @@ class AnalysisPageView(View):
         if "id" not in request.GET:
             raise SuspiciousOperation("No ID provided.")
 
-        id = request.GET["id"]
+        analysis_id = request.GET["id"]
 
         try:
-            audio_model = await sync_to_async(AudioFile.objects.get)(id=id)
+            audio_model = await sync_to_async(AudioFile.objects.get)(id=analysis_id)
         except:
             raise SuspiciousOperation("ID not found.")
 
         if await sync_to_async(audio_model.failed)():
             raise Http404("The requested ID was not found.")
         elif await sync_to_async(audio_model.fulfilled)():
-            return render(request, "pages/analysis.html", context={"id": id})
+            return render(request, "pages/analysis.html", context={"id": analysis_id})
         else:
             return render(
-                request, "pages/analysis.html", context={"processing": True, "id": id}
+                request,
+                "pages/analysis.html",
+                context={"processing": True, "id": analysis_id},
             )

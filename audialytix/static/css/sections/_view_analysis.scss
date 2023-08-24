@@ -1,0 +1,36 @@
+#analysis-view {
+    height: 75vh;
+    padding: 2%;
+}
+
+#analysis-card {
+    max-width: fit-content;
+}
+
+#chart-card {
+    height: 80%;
+
+    overflow-x: scroll;
+
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+    }
+}
+
+#chart-area {
+    height: 100%;
+}
+
+#zoom {
+    position: fixed;
+
+    padding-left: 8px;
+    padding-top: 2px;
+
+    &::selection {
+        background: transparent;
+    }
+}
