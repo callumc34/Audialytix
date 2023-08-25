@@ -22,6 +22,18 @@
     <main>
         <div id="card-container">
             <div class="ui centered stackable cards">
+                {% if not page_obj %}
+                    <div class="ui raised card">
+                        <div class="content">
+                            <div class="header">
+                                There's no files here.
+                            </div>
+                            <div class="meta">
+                                <a class="ui" href="/upload">Upload</a> a file to get started.
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 {% for file in page_obj %}
                     <div class="ui raised card">
                         <div class="content">

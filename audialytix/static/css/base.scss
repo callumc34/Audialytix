@@ -41,7 +41,7 @@ $heading-scale: 50;
 }
 
 @mixin transition {
-    transition: all 0.4s ease-out;
+    transition: all 0.4s ease-out !important;
 }
 
 // Base styling
@@ -66,10 +66,10 @@ body {
 a {
     @include transition;
 
-    color: $medium-blue;
+    color: $medium-blue !important;
 
     &:hover {
-        color: $dark-blue;
+        color: $dark-blue !important;
     }
 }
 
