@@ -22,6 +22,8 @@ class HomePageView(View):
                 name__icontains=search
             ) | audio_files.filter(author__icontains=search)
 
+        audio_files = [file for file in audio_files if file.fulfilled()]
+
         # 30th is upload card
         paginator = Paginator(audio_files, 15)
 

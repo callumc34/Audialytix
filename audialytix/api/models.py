@@ -20,15 +20,15 @@ class AudioFile(models.Model):
     name = models.CharField(max_length=255)
     analysis_type = models.CharField(max_length=10, choices=AUDIO_CHOICES)
 
+    def __str__(self):
+        return f"{self.author} - {self.name}"
+
     def _stale(self):
         if not self.fulfilled():
             time_difference = timezone.now() - self.created_at
             return time_difference > timezone.timedelta(minutes=5)
 
         return False
-
-    def __str__(self):
-        return f"{self.author} - {self.name}"
 
     def analysis_items(self):
         items = []
