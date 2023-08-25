@@ -172,7 +172,7 @@ const setup = () => {
         .then((json) => {
             setupCard(json);
             $('#loader').hide();
-            $('#analysis-view').removeClass('hidden');
+            $('.fill-100percent.hidden').removeClass('hidden');
         });
 };
 
