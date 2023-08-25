@@ -9,6 +9,8 @@ services:
             interval: 15s
             timeout: 10s
             retries: 5
+        volumes:
+            - ./db/data:/data/db
         networks:
             - backnet
         env_file: db/.env
