@@ -103,6 +103,11 @@ nav {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 }
 
+.nav-list {
+    position: sticky;
+    z-index: 2;
+}
+
 .nav-mobile {
     display: none;
     position: absolute;
@@ -187,7 +192,7 @@ nav {
     }
 }
 
-@media screen and (min-width: $breakpoint) {
+@media screen and (min-width: #{$breakpoint + 1}) {
     .nav-list {
         display: block !important;
     }

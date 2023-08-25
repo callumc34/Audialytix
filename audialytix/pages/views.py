@@ -1,6 +1,7 @@
 from api.models import AudioFile
 from asgiref.sync import sync_to_async
 from django.core.exceptions import SuspiciousOperation
+from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -12,8 +13,30 @@ class IndexPageView(View):
 
 
 class HomePageView(View):
-    async def get(self, request, *args, **kwargs):
-        return render(request, "pages/home.html", context=None)
+    def get(self, request, *args, **kwargs):
+        search = request.GET.get("search", None)
+
+        audio_files = AudioFile.objects.all()
+        if search:
+            audio_files = audio_files.filter(
+                name__icontains=search
+            ) | audio_files.filter(author__icontains=search)
+
+        # 30th is upload card
+        paginator = Paginator(audio_files, 15)
+
+        page_number = request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
+
+        try:
+            page_number = int(page_number)
+        except:
+            raise Http404("Page not found.")
+
+        if page_number > paginator.num_pages:
+            raise Http404("Page not found.")
+
+        return render(request, "pages/home.html", {"page_obj": page_obj})
 
 
 class UploadPageView(View):
@@ -26,7 +49,7 @@ class AnalysisPageView(View):
         if "id" not in request.GET:
             raise SuspiciousOperation("No ID provided.")
 
-        analysis_id = request.GET["id"]
+        analysis_id = request.GET.get("id")
 
         try:
             audio_model = await sync_to_async(AudioFile.objects.get)(id=analysis_id)

@@ -19,7 +19,76 @@
 {% endblock head %}
 
 {% block content %}
-    <div>
-        <p>Audialytix is an audio analysis website.</p>
-    </div>
+    <main>
+        <div id="card-container">
+            <div class="ui centered stackable cards">
+                {% for file in page_obj %}
+                    <div class="ui raised card">
+                        <div class="content">
+                            <div class="header">
+                                {{ file|safe }}
+                            </div>
+                            <div class="meta">
+                                {{ file.analysis_type }}
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="ui sub header">
+                                Analysis
+                            </div>
+                            <div class="ui small feed">
+                                {% for analysis in file.analysis_items %}
+                                    <div class="event">
+                                        <div class="content">
+                                            <div class="summary">
+                                                {{ analysis }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <input type="button" value="View" data-id="{{ file.id }}">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="center-parent" id="pagination-wrapper">
+            <div class="center-child">
+                <div class="ui pagination menu">
+                    {% if page_obj.number > 2 %}
+                        <a class="item" href="?page=1">
+                            1
+                        </a>
+                        <a class="item">
+                            ...
+                        </a>
+                    {% endif %}
+                    {% if page_obj.has_previous %}
+                        <a class="item" href="?page={{ page_obj.previous_page_number }}">
+                            {{ page_obj.previous_page_number }}
+                        </a>
+                    {% endif %}
+                        <a class="active item">
+                            {{ page_obj.number }}
+                        </a>
+                    {% if page_obj.has_next %}
+                        <a class="item" href="?page={{ page_obj.next_page_number }}">
+                            {{ page_obj.next_page_number }}
+                        </a>
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:"-1" %}
+                            <a class="item">
+                                ...
+                            </a>
+                            <a class="item" href="?page={{ page_obj.paginator.num_pages }}">
+                                {{ page_obj.paginator.num_pages }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock content %}
