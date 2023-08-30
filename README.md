@@ -54,6 +54,8 @@ The analyser container handles the processing and analysis of the audio file it 
 
 The database container simply holds a MongoDB instance which is used by the website container to store the analysis results. This container is not publicly exposed and is only accessible from the website container. Django does not inherently support MongoDB and thus the Djongo library is used to facilitate the ORM relationship between the website container and the database container.
 
+This container uses a volume when used with the compose command to store and maintain the data between runs - `db/data`.
+
 #### ENV Variables
 
 - `MONGO_INITDB_ROOT_USERNAME` - The username of the account on the MongoDB database
@@ -73,13 +75,13 @@ Audialytix currently supports the following features:
 Audialytix uses [Docker](https://www.docker.com/) to containerise the application. To build and run the application, follow these steps:
 
 1. Install [Docker](https://www.docker.com/)
-2. Clone the repository `git clone https://github.com/callumc34/audialytix`
-3. Configure the environment variables in the .env file
+2. Clone the repository `git clone https://github.com/callumc34/audialytix` and cd into the directory
+3. Create the appropriate .env file in each directory
     - Optionally, use the pre configured .env.compose file for development
         - `find . -type f -name ".env.compose" -exec sh -c 'cp "$1" "$(dirname "$1")/.env"' _ {} \;`
 4. Build the docker images `docker-compose build`
-5. Run the docker images `docker-compose up`
-6. The website will be visible at `http://localhost` or `http://127.0.0.1`
+5. Run the docker images `docker-compose up` and wait for the containers to start
+6. Once the health checks are done, the website will be visible at `http://localhost` or `http://127.0.0.1`
 
 ## Contributing
 
