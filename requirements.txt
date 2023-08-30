@@ -1,1 +1,4 @@
+-r analyser/requirements.txt
+-r audialytix/requirements.txt
+
 pre-commit==3.3.3
