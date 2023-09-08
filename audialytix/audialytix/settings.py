@@ -99,20 +99,15 @@ WSGI_APPLICATION = "audialytix.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-#
-# Audialytix uses MongoDB as its database.
 
 DATABASES = {
     "default": {
-        "ENGINE": "djongo",
-        "NAME": "audialytix",
-        "ENFORCE_SCHEMA": True,
-        "CLIENT": {
-            "host": os.environ.get("MONGO_HOST", "localhost"),
-            "port": int(os.environ.get("MONGO_PORT", 27017)),
-            "username": os.environ["MONGO_USERNAME"],
-            "password": os.environ["MONGO_PASSWORD"],
-        },
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("DB_NAME", "audialytix"),
+        "USER": os.environ.get("DB_USERNAME", "postgres"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "postgres"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 

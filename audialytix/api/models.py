@@ -1,5 +1,5 @@
+from django.db import models
 from django.utils import timezone
-from djongo import models
 
 STALE_ERROR = "There was an error processing this file."
 
