@@ -8,7 +8,7 @@
 
 Audialytix is a containerised web application for analysing information about audio files and viewing its visual representation.
 
-Audialytix uses a [Django](https://www.djangoproject.com/) backend with Django templates for the frontend. [Djongo](https://github.com/doableware/djongo) is used to handle the ORM relationship with the MongoDB backend. The audio processing server is a [Flask](https://flask.palletsprojects.com/) application which uses [Essentia](https://essentia.upf.edu/) for the audio processing using asynchronous tasks. To facilitate the asynchronocity of both the main web server and the processing server, they are served in production using [Uvicorn](https://www.uvicorn.org).
+Audialytix uses a [Django](https://www.djangoproject.com/) backend with Django templates for the frontend. [Psycopg2](https://www.psycopg.org/) is used to handle the ORM relationship with the Postgres database. The audio processing server is a [Flask](https://flask.palletsprojects.com/) application which uses [Essentia](https://essentia.upf.edu/) for the audio processing using asynchronous tasks. To facilitate the asynchronocity of both the main web server and the processing server, they are served in production using [Uvicorn](https://www.uvicorn.org).
 
 ## Design
 
@@ -25,12 +25,13 @@ The website container contains the Django application that is the user facing as
 - `DJANGO_SECRET_KEY` - The secret key used by Django
 - `DJANGO_DEBUG` - Whether to run Django in debug mode
 
-##### MongoDB specific
+##### Postgres specific
 
-- `MONGO_HOST` - The host of the MongoDB database
-- `MONGO_PORT` - The port of the MongoDB database
-- `MONGO_USERNAME` - The username of the MongoDB database
-- `MONGO_PASSWORD` - The password of the MongoDB database
+- `DB_HOST` - The host of the database
+- `DB_PORT` - The port of the database
+- `DB_USERNAME` - The username of the database
+- `DB_PASSWORD` - The password of the database
+- `DB_NAME` - The name of the default database to use
 
 ##### API specific
 
@@ -52,15 +53,15 @@ The analyser container handles the processing and analysis of the audio file it 
 
 ### Database Container
 
-The database container simply holds a MongoDB instance which is used by the website container to store the analysis results. This container is not publicly exposed and is only accessible from the website container. Django does not inherently support MongoDB and thus the Djongo library is used to facilitate the ORM relationship between the website container and the database container.
+The database container simply holds a Postgres instance which is used by the website container to store the analysis results. This container is not publicly exposed and is only accessible from the website container. Psycopg2 is used to facilitate the ORM relationship between Django and Postgres.
 
 This container uses a volume when used with the compose command to store and maintain the data between runs - `db/data`.
 
 #### ENV Variables
 
-- `MONGO_INITDB_ROOT_USERNAME` - The username of the account on the MongoDB database
-- `MONGO_INITDB_ROOT_PASSWORD` - The password of the account on the MongoDB database
-- `MONGO_INITDB_DATABASE` - The name of the database to use
+- `POSTGRES_USER` - The username of the account on the Postgres database
+- `POSTGRES_PASSWORD` - The password of the account on the Postgres database
+- `POSTGRES_DB` - The name of the database to use
 
 ## Current Features
 
