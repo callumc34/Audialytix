@@ -15,4 +15,3 @@ audialytix/staticfiles
 
 # terraform
 .terraform
-.terraform*

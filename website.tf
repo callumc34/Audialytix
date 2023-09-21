@@ -55,7 +55,7 @@ module "website-container-gce" {
       },
       {
         name  = "ANALYSER_HOST",
-        value = google_compute_address.analyser.address
+        value = "http://${google_compute_address.analyser.address}"
       },
       {
         name  = "WEBHOOK_RETURN_HOST",
