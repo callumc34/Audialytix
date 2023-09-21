@@ -12,3 +12,7 @@ db/data
 
 # Static web files
 audialytix/staticfiles
+
+# terraform
+.terraform
+.terraform*
