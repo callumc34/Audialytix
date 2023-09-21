@@ -1,4 +1,4 @@
-module "gce-container" {
+module "analyser-container-gce" {
   depends_on = [null_resource.analyser_build_image]
 
   # https://github.com/terraform-google-modules/terraform-google-container-vm
@@ -58,7 +58,7 @@ resource "google_compute_instance" "analyser" {
 
   boot_disk {
     initialize_params {
-      image = module.gce-container.source_image
+      image = module.analyser-container-gce.source_image
     }
   }
 
@@ -70,13 +70,13 @@ resource "google_compute_instance" "analyser" {
   }
 
   metadata = {
-    gce-container-declaration = module.gce-container.metadata_value
+    gce-container-declaration = module.analyser-container-gce.metadata_value
     google-logging-enabled    = "true"
     google-monitoring-enabled = "true"
   }
 
   labels = {
-    container-vm = module.gce-container.vm_container_label
+    container-vm = module.analyser-container-gce.vm_container_label
   }
 
   service_account {

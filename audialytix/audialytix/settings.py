@@ -37,7 +37,12 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "False").casefold() in [
     "on",
 ]
 
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "website"]
+ALLOWED_HOSTS = [
+    os.environ.get("ALLOWED_HOST", "localhost"),
+    "0.0.0.0",
+    "127.0.0.1",
+    "localhost",
+]
 
 ANALYSER_HOST = os.environ.get("ANALYSER_HOST", "http://127.0.0.1:8080")
 
