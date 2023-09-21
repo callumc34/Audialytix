@@ -52,7 +52,7 @@ resource "google_compute_firewall" "analyser" {
 resource "google_compute_instance" "analyser" {
   project      = local.project
   name         = "analyser-instance"
-  machine_type = "n1-standard-1"
+  machine_type = var.analyser_machine
   zone         = local.zone
   tags         = ["analyser"]
 
