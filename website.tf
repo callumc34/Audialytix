@@ -54,12 +54,20 @@ module "website-container-gce" {
         value = google_sql_database.main.name
       },
       {
-        name  = "ANALYSER_HOST",
+        name  = "ANALYSER_HOST"
         value = "http://${google_compute_address.analyser.address}"
       },
       {
-        name  = "WEBHOOK_RETURN_HOST",
+        name  = "WEBHOOK_RETURN_HOST"
         value = "http://${google_compute_address.website.address}"
+      },
+      {
+        name  = "STATIC_URL"
+        value = "https://storage.googleapis.com/${google_storage_bucket.static.name}/"
+      },
+      {
+        name  = "GS_BUCKET_NAME"
+        value = google_storage_bucket.static.name
       }
     ]
   }
