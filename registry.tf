@@ -34,9 +34,3 @@ resource "null_resource" "website_build_image" {
     command = "gcloud builds submit --project ${local.project} --tag ${local.region}-docker.pkg.dev/${local.project}/${local.registry.repository_id}/${local.registry.website.image} ${path.module}/audialytix"
   }
 }
-
-resource "google_project_iam_member" "artifact_registry_reader" {
-  project = local.project
-  role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${google_service_account.main.email}"
-}

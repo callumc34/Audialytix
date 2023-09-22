@@ -27,8 +27,3 @@ provider "google" {
   project = local.project
   region  = local.region
 }
-
-resource "google_service_account" "main" {
-  account_id   = local.project
-  display_name = local.project
-}
