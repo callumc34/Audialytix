@@ -51,8 +51,6 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 512 * 1024 * 1024
 # Application definition
 
 INSTALLED_APPS = [
-    # Whitenoise static file serving
-    "whitenoise.runserver_nostatic",
     # Django
     "django.contrib.admin",
     "django.contrib.auth",
@@ -71,7 +69,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -155,8 +152,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+DEFAULT_FILE_STORAGE = "audialytix.storage.CachedCloudStorage"
+STATICFILES_STORAGE = DEFAULT_FILE_STORAGE
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
+STATIC_URL = os.environ["STATIC_URL"]
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_FINDERS = (
@@ -164,9 +164,14 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder",
 )
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME", "audialytix")
+GS_AUTO_CREATE_BUCKET = False
+GS_DEFAULT_ACL = "publicRead"
 
 # Compressors
+COMPRESS_STORAGE = STATICFILES_STORAGE
+COMPRESS_OFFLINE_MANIFEST_STORAGE = STATICFILES_STORAGE
+
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 
