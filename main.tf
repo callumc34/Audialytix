@@ -21,6 +21,10 @@ locals {
       image = "website:latest"
     }
   }
+
+  website = {
+    private_ip = "10.0.1.3"
+  }
 }
 
 provider "google" {

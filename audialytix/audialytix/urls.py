@@ -23,7 +23,7 @@ urlpatterns = [
     # Site wide favicon
     path(
         "favicon.ico",
-        RedirectView.as_view(url=settings.STATIC_ROOT + "images/logo/small/icon.svg"),
+        RedirectView.as_view(url=settings.STATIC_URL + "images/logo/small/icon.svg"),
     ),
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),

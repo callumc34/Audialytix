@@ -1,4 +1,5 @@
 resource "google_sql_database_instance" "main" {
+  depends_on       = [google_service_networking_connection.main]
   name             = "audialytix-database"
   database_version = "POSTGRES_15"
   region           = local.region
@@ -12,11 +13,8 @@ resource "google_sql_database_instance" "main" {
     // TODO(Callum): Setup private network with website
     // https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance
     ip_configuration {
-      ipv4_enabled = true
-      authorized_networks {
-        name  = "allow-all"
-        value = "0.0.0.0/0"
-      }
+      ipv4_enabled    = false
+      private_network = google_compute_network.main.id
     }
   }
 }

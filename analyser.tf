@@ -26,29 +26,6 @@ module "analyser-container-gce" {
   restart_policy = "Always"
 }
 
-resource "google_compute_address" "analyser" {
-  name   = "analyser"
-  region = local.region
-}
-
-resource "google_compute_network" "analyser" {
-  name = "analyser-network"
-}
-
-resource "google_compute_firewall" "analyser" {
-  name    = "analyser-firewall"
-  network = google_compute_network.analyser.name
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-
-  // TODO(Callum): Only allow traffic from audialytix website
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["analyser"]
-}
-
 resource "google_compute_instance" "analyser" {
   project      = local.project
   name         = "analyser-instance"
@@ -63,10 +40,7 @@ resource "google_compute_instance" "analyser" {
   }
 
   network_interface {
-    network = google_compute_network.analyser.name
-    access_config {
-      nat_ip = google_compute_address.analyser.address
-    }
+    subnetwork = google_compute_subnetwork.main.id
   }
 
   metadata = {

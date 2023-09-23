@@ -22,8 +22,8 @@ module "website-container-gce" {
         value = "0.0.0.0"
       },
       {
-        name  = "ALLOWED_HOST"
-        value = google_compute_address.website.address
+        name  = "ALLOWED_HOSTS"
+        value = "${google_compute_address.website.address},${local.website.private_ip}"
       },
       {
         name  = "DJANGO_SECRET_KEY"
@@ -35,7 +35,7 @@ module "website-container-gce" {
       },
       {
         name  = "DB_HOST"
-        value = google_sql_database_instance.main.public_ip_address
+        value = google_sql_database_instance.main.private_ip_address
       },
       {
         name  = "DB_PORT"
@@ -55,11 +55,11 @@ module "website-container-gce" {
       },
       {
         name  = "ANALYSER_HOST"
-        value = "http://${google_compute_address.analyser.address}"
+        value = "http://${google_compute_instance.analyser.network_interface.0.network_ip}"
       },
       {
         name  = "WEBHOOK_RETURN_HOST"
-        value = "http://${google_compute_address.website.address}"
+        value = "http://${local.website.private_ip}"
       },
       {
         name  = "STATIC_URL"
@@ -73,29 +73,6 @@ module "website-container-gce" {
   }
 
   restart_policy = "Always"
-}
-
-resource "google_compute_address" "website" {
-  name   = "website"
-  region = local.region
-}
-
-resource "google_compute_network" "website" {
-  name = "website-network"
-}
-
-resource "google_compute_firewall" "website" {
-  name    = "website-firewall"
-  network = google_compute_network.website.name
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-
-  // TODO(Callum): Only allow traffic from audialytix website
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["website"]
 }
 
 resource "google_compute_instance" "website" {
@@ -112,7 +89,8 @@ resource "google_compute_instance" "website" {
   }
 
   network_interface {
-    network = google_compute_network.website.name
+    subnetwork = google_compute_subnetwork.main.id
+    network_ip = local.website.private_ip
     access_config {
       nat_ip = google_compute_address.website.address
     }
