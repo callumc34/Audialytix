@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Audialytix logo" height="200px" src="https://raw.githubusercontent.com/callumc34/Audialytix/main/audialytix/static/images/logo/highres/nobackground/logo.svg">
+    <img alt="Audialytix logo" height="200px" src="https://raw.githubusercontent.com/callumc34/Audialytix/main/files/website/static/images/logo/highres/nobackground/logo.svg">
 </p>
 
 <h1 align="center">
