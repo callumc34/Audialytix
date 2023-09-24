@@ -20,6 +20,12 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+USE_GOOGLE_CLOUD = os.environ.get("USE_GOOGLE_CLOUD", "True").casefold() in [
+    "true",
+    "1",
+    "on",
+]
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -68,8 +74,15 @@ INSTALLED_APPS = [
     "sekizai",
 ]
 
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
+if not USE_GOOGLE_CLOUD:
+    INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
+
+MIDDLEWARE = ["django.middleware.security.SecurityMiddleware"]
+
+if not USE_GOOGLE_CLOUD:
+    MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
+
+MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -153,11 +166,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-DEFAULT_FILE_STORAGE = "audialytix.storage.CachedCloudStorage"
-STATICFILES_STORAGE = DEFAULT_FILE_STORAGE
+if USE_GOOGLE_CLOUD:
+    DEFAULT_FILE_STORAGE = "audialytix.storage.CachedCloudStorage"
+    STATICFILES_STORAGE = DEFAULT_FILE_STORAGE
+
+    GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME", "audialytix")
+    GS_AUTO_CREATE_BUCKET = False
+    GS_DEFAULT_ACL = "publicRead"
+
+    COMPRESS_STORAGE = STATICFILES_STORAGE
+    COMPRESS_OFFLINE_MANIFEST_STORAGE = STATICFILES_STORAGE
+
+else:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = os.environ["STATIC_URL"]
+STATIC_URL = os.environ["STATIC_URL"] if USE_GOOGLE_CLOUD else "/static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_FINDERS = (
@@ -165,14 +189,8 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder",
 )
-GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME", "audialytix")
-GS_AUTO_CREATE_BUCKET = False
-GS_DEFAULT_ACL = "publicRead"
 
 # Compressors
-COMPRESS_STORAGE = STATICFILES_STORAGE
-COMPRESS_OFFLINE_MANIFEST_STORAGE = STATICFILES_STORAGE
-
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 

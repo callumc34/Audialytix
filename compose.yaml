@@ -32,7 +32,7 @@ services:
         expose:
             - 8080
         depends_on:
-            db:
+            database:
                 condition: service_healthy
 
     website:
@@ -51,7 +51,7 @@ services:
         ports:
             - 80:80
         depends_on:
-            db:
+            database:
                 condition: service_healthy
             analyser:
                 condition: service_healthy
