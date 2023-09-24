@@ -1,8 +1,8 @@
 ---
 services:
-    db:
+    database:
         build:
-            context: db
+            context: files/database
         restart: always
         healthcheck:
             test: [CMD-SHELL, pg_isready, -u, $POSTGRES_USER, -d, $POSTGRES_DB]
@@ -10,16 +10,16 @@ services:
             timeout: 10s
             retries: 5
         volumes:
-            - ./db/data:/data/db
+            - ./files/database/data:/data/db
         networks:
             - backnet
-        env_file: db/.env
+        env_file: files/database/.env
         expose:
             - 5438
 
     analyser:
         build:
-            context: analyser
+            context: files/analyser
         restart: always
         healthcheck:
             test: curl --fail http://localhost:8080/alive || exit 1
@@ -28,7 +28,7 @@ services:
             retries: 5
         networks:
             - backnet
-        env_file: analyser/.env
+        env_file: files/analyser/.env
         expose:
             - 8080
         depends_on:
@@ -37,7 +37,7 @@ services:
 
     website:
         build:
-            context: audialytix
+            context: files/website
         restart: always
         healthcheck:
             test: curl --fail http://localhost || exit 1
@@ -47,7 +47,7 @@ services:
         networks:
             - backnet
             - outside
-        env_file: audialytix/.env
+        env_file: files/website/.env
         ports:
             - 80:80
         depends_on:

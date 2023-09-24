@@ -1,0 +1,13 @@
+analyser_machine_type = "e2-micro"
+analyser_port = "80"
+analyser_debug = "False"
+
+database_machine_type = "db-f1-micro"
+database_db_name = "audialytix"
+database_user = "audialytix-root"
+database_password = "insecure-login"
+
+website_machine_type = "e2-micro"
+website_port = "80"
+website_secret_key = "\"django-insecure-#6l*)qe#e-qq#kf@18m(e-34tg7^pikd81v0(+vupy)w%7mlln\""
+website_debug = "False"

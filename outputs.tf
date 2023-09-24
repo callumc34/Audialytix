@@ -1,4 +1,3 @@
-output "website_ip" {
-  description = "Static IP address of website instance"
-  value       = google_compute_address.website.address
+output "website_public_ip" {
+  value = module.network.website_static_ip
 }

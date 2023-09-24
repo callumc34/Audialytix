@@ -1,0 +1,8 @@
+# Python cache generation
+__pycache__
+
+# Static files
+staticfiles
+
+# Environment files
+.env*

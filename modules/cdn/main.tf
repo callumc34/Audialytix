@@ -1,7 +1,7 @@
 resource "google_storage_bucket" "static" {
-  name          = "audialytix-static"
+  name          = var.name
   storage_class = "STANDARD"
-  location      = local.region
+  location      = var.region
   force_destroy = true
 }
 

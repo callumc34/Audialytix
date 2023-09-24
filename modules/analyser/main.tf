@@ -1,16 +1,14 @@
 module "analyser-container-gce" {
-  depends_on = [null_resource.analyser_build_image]
-
   # https://github.com/terraform-google-modules/terraform-google-container-vm
   source  = "terraform-google-modules/container-vm/google"
   version = "~> 2.0"
 
   container = {
-    image = "${local.region}-docker.pkg.dev/${local.project}/${local.registry.repository_id}/${local.registry.analyser.image}"
+    image = "${var.region}-docker.pkg.dev/${var.project}/${var.registry.repository_id}/${var.registry.analyser.image}"
     env = [
       {
         name  = "PORT"
-        value = var.analyser_port
+        value = var.port
       },
       {
         name  = "HOST",
@@ -18,7 +16,7 @@ module "analyser-container-gce" {
       },
       {
         name  = "DEBUG",
-        value = var.analyser_debug
+        value = var.debug
       }
     ]
   }
@@ -26,11 +24,11 @@ module "analyser-container-gce" {
   restart_policy = "Always"
 }
 
-resource "google_compute_instance" "analyser" {
-  project      = local.project
+resource "google_compute_instance" "main" {
+  project      = var.project
   name         = "analyser-instance"
-  machine_type = var.analyser_machine
-  zone         = local.zone
+  machine_type = var.machine_type
+  zone         = var.zone
   tags         = ["analyser"]
 
   boot_disk {
@@ -40,7 +38,7 @@ resource "google_compute_instance" "analyser" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.main.id
+    subnetwork = var.subnetwork_id
   }
 
   metadata = {
@@ -54,7 +52,7 @@ resource "google_compute_instance" "analyser" {
   }
 
   service_account {
-    email = google_service_account.main.email
+    email = var.service_account_email
     scopes = [
       "cloud-platform"
     ]

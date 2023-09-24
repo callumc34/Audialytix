@@ -7,11 +7,12 @@ __pycache__
 # Environment files
 .env
 
-# db files
-db/data
+# Database volume
+files/database/data
 
 # Static web files
-audialytix/staticfiles
+files/audialytix/staticfiles
 
-# terraform
+# Terraform
 .terraform
+*.tfvars

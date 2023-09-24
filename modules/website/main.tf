@@ -1,21 +1,14 @@
 module "website-container-gce" {
-  depends_on = [
-    null_resource.analyser_build_image,
-    //google_storage_bucket.static,
-    google_compute_address.website,
-    google_sql_database.main
-  ]
-
   # https://github.com/terraform-google-modules/terraform-google-container-vm
   source  = "terraform-google-modules/container-vm/google"
   version = "~> 2.0"
 
   container = {
-    image = "${local.region}-docker.pkg.dev/${local.project}/${local.registry.repository_id}/${local.registry.website.image}"
+    image = "${var.region}-docker.pkg.dev/${var.project}/${var.registry.repository_id}/${var.registry.website.image}"
     env = [
       {
         name  = "PORT"
-        value = var.website_port
+        value = var.port
       },
       {
         name  = "HOST"
@@ -23,51 +16,51 @@ module "website-container-gce" {
       },
       {
         name  = "ALLOWED_HOSTS"
-        value = "${google_compute_address.website.address},${local.website.private_ip}"
+        value = "${var.public_ip},${var.private_ip}"
       },
       {
         name  = "DJANGO_SECRET_KEY"
-        value = var.website_secret_key
+        value = var.secret_key
       },
       {
         name  = "DJANGO_DEBUG"
-        value = var.website_debug
+        value = var.debug
       },
       {
         name  = "DB_HOST"
-        value = google_sql_database_instance.main.private_ip_address
+        value = var.database_private_ip
       },
       {
         name  = "DB_PORT"
-        value = "5432"
+        value = var.database_port
       },
       {
         name  = "DB_USERNAME"
-        value = google_sql_user.root.name
+        value = var.database_username
       },
       {
         name  = "DB_PASSWORD"
-        value = google_sql_user.root.password
+        value = var.database_password
       },
       {
         name  = "DB_NAME"
-        value = google_sql_database.main.name
+        value = var.database_db_name
       },
       {
         name  = "ANALYSER_HOST"
-        value = "http://${google_compute_instance.analyser.network_interface.0.network_ip}"
+        value = "http://${var.analyser_private_ip}:${var.analyser_port}"
       },
       {
         name  = "WEBHOOK_RETURN_HOST"
-        value = "http://${local.website.private_ip}"
+        value = "http://${var.private_ip}:${var.port}"
       },
       {
         name  = "STATIC_URL"
-        value = "https://storage.googleapis.com/${google_storage_bucket.static.name}/"
+        value = "https://storage.googleapis.com/${var.bucket_name}/"
       },
       {
         name  = "GS_BUCKET_NAME"
-        value = google_storage_bucket.static.name
+        value = var.bucket_name
       }
     ]
   }
@@ -75,11 +68,11 @@ module "website-container-gce" {
   restart_policy = "Always"
 }
 
-resource "google_compute_instance" "website" {
-  project      = local.project
+resource "google_compute_instance" "main" {
+  project      = var.project
   name         = "website-instance"
-  machine_type = var.website_machine
-  zone         = local.zone
+  machine_type = var.machine_type
+  zone         = var.zone
   tags         = ["website"]
 
   boot_disk {
@@ -89,10 +82,10 @@ resource "google_compute_instance" "website" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.main.id
-    network_ip = local.website.private_ip
+    subnetwork = var.subnetwork_id
+    network_ip = "10.0.1.3"
     access_config {
-      nat_ip = google_compute_address.website.address
+      nat_ip = var.public_ip
     }
   }
 
@@ -107,7 +100,7 @@ resource "google_compute_instance" "website" {
   }
 
   service_account {
-    email = google_service_account.main.email
+    email = var.service_account_email
     scopes = [
       "cloud-platform"
     ]
